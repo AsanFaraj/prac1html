@@ -13,14 +13,26 @@
     <input type="text" name="" id="myCustomerId" placeholder="Customer Id">
     <input type="text" name="" id="productName" placeholder="product name">
     <input type="text" name="" id="productPrice" placeholder="price">
-
     <button  id="myButton">Send</button>
+
+
+    <h4>Delete a product of a customer</h4>
+    <p>Example customer Id: 4FHQYosifixPd2kyTJIP</p>
+    <p>order document Id's are in the console if u search add a new product or go to opdrachtD.html to check </p>
+     <!--- redirect to OpdrachtD.html-->
+    <a href="OpdrachtD.html">OpdrachtD</a>
+    <input type="text" name="" id="myCustomerId2" placeholder="Customer Id">
+    <input type="text" name="" id="productName2" placeholder="order document Id">
+
+
+    <button  id="myButton2">Delete</button>
 
 
     <body>
       
         <script type="module">
            document.getElementById("myButton").addEventListener ("click",myFunction);
+           document.getElementById("myButton2").addEventListener ("click",deleteOrder);
 
           
                         const firebaseConfig = {
@@ -40,7 +52,13 @@
                     var productName = document.getElementById("productName").value
                     var productPrice = document.getElementById("productPrice").value
 
-
+                    //get customer orders
+                    db.collection("customers").doc(customerId).collection("orders").get().then(function(querySnapshot) {
+                        querySnapshot.forEach(function(doc) {
+                            // doc.data() is never undefined for query doc snapshots
+                            console.log(doc.id, " => ", doc.data());
+                        });
+                    });
 
                   // Add a new document with a generated id.
                     db.collection("customers").doc(customerId).collection("orders").add({
@@ -56,6 +74,17 @@
 
 
                 
+            }
+
+            function deleteOrder(){
+                var customerId = document.getElementById("myCustomerId2").value
+                var orderId = document.getElementById("productName2").value
+
+                db.collection("customers").doc(customerId).collection("orders").doc(orderId).delete().then(function() {
+                    console.log("Document successfully deleted!");
+                }).catch(function(error) {
+                    console.error("Error removing document: ", error);
+                });
             }
 
 
